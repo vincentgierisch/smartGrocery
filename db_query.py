@@ -65,7 +65,7 @@ def add_shopping_tour(db_path, product_sorting, supermarket_id):
 
 
     for i in range (len(product_sorting)):
-        for j in range(i, len(product_sorting)):
+        for j in range(i+1, len(product_sorting)):
             product_id1 = product_sorting[i]
             product_id2 = product_sorting[j]
             cursor.execute("""
