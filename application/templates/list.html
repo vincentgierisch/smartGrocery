@@ -1,0 +1,24 @@
+
+
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h1>{{ list_name }}</h1>
+<!-- ToDo: Add code to display the items of a shopping list - each item has a delete button that calls delete_item with parameters -->
+
+  <h2>Add an item to the list</h2>
+  <form action="{{ url_for('add_item', list_id=list_id) }}" method="POST">
+    <div class="form-group">
+      <label for="item_name">Item name:</label>
+      <input type="text" class="form-control" name="item_name" id="item_name" placeholder="Enter item name">
+    </div>
+    <button type="submit" class="btn btn-primary">Add item</button>
+  </form>
+  <br>
+  <p>
+    
+    <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to home</a>
+  </p>
+</div>
+{% endblock %}
