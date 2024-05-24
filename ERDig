@@ -1,0 +1,32 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+Table ShoppingList {
+  ShoppingListId integer [primary key]
+  ShoppingListName text
+}
+
+Table ShoppingListMapping {
+  ShoppingListId integer [primary key]
+  ProductID integer
+}
+
+Table ProductList {
+  ProductName text
+  ProductID integer [primary key]
+}
+
+Table SupermarketList {
+  SupermarketName TEXT
+  SupermarketID integer [primary key]
+}
+
+Table Mapping {
+    ProductID1 integer
+    ProductID2 integer
+    SupermarketID integer
+    Counter integer
+}
+Ref: ShoppingListMapping.ProductID > ProductList.ProductID // many-to-one
+Ref: SupermarketList.SupermarketID > Mapping.SupermarketID
+Ref: ProductList.ProductID > Mapping.ProductID1
+Ref: ProductList.ProductID > Mapping.ProductID2
