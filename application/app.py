@@ -17,60 +17,38 @@ Session(app)
 # Homepage that displays all shopping lists
 @app.route('/')
 def home():
-  if "user_id" in session:
-    # If the user is logged in, query the database for the user's shopping lists
-    user_id = session['user_id']
-    shopping_lists = db.execute("SELECT * FROM shopping_lists WHERE user_id = ?", user_id)
+    shopping_lists = db.execute("SELECT * FROM shopping_lists WHERE user_id = ?", 0)
     # Display the shopping lists on the home page
     return render_template('home.html', shopping_lists=shopping_lists)
-  else:
-    # If the user is not logged in, redirect to the login page
-    return redirect(url_for('login'))
-
 
 # Page for creating a new shopping list
 @app.route('/new_list')
 def new_list():
-  # If the user is logged in, render the new list page
-  if "user_id" in session:
     return render_template('new_list.html')
-  else:
-    # If the user is not logged in, redirect to the login page
-    return redirect(url_for('login'))
 
 
     
 # Function for adding a new shopping list
 @app.route('/add_list', methods=['POST'])
 def add_list():
-  # If the user is logged in, render the add list page
-  if "user_id" in session:
     # Get the name of the new list from the form
     list_name = request.form['list_name']
     # If the form wasn't empty:
     if list_name:
-      # Get the user's id from the session
-      user_id = session['user_id']
-      # Insert the new list into the shopping_lists table
-      db.execute("INSERT INTO shopping_lists (title, user_id) VALUES (?, ?)", list_name, user_id)
-      # Redirect to the home page to display all shopping lists
-      return redirect(url_for('home'))
+        # Insert the new list into the shopping_lists table
+        db.execute("INSERT INTO shopping_lists (title, user_id) VALUES (?, ?)", list_name, 0)
+        # Redirect to the home page to display all shopping lists
+        return redirect(url_for('home'))
       
     else:
-      return redirect(url_for('new_list'))
-
-  else:
-    # If the user is not logged in, redirect to the login page
-    return redirect(url_for('login'))
+        return redirect(url_for('new_list'))
 
 
 # Function that gets called if the user clicks on a specific shopping list
 @app.route('/view_list/<list_id>')
 def view_list(list_id):
-  # If the user is logged in, render the add list page
-  if "user_id" in session:
     # Query the database for the shopping list with the given name and the current user's id
-    list_data = db.execute("SELECT * FROM shopping_lists WHERE id = ? AND user_id = ?", list_id, session['user_id'])
+    list_data = db.execute("SELECT * FROM shopping_lists WHERE id = ? AND user_id = ?", list_id, 0)
 
     if list_data:
         # Query the database for the items in the shopping list
@@ -83,18 +61,12 @@ def view_list(list_id):
     # If the list was not found, redirect to the home page
     return redirect(url_for('home'))
 
-  else:
-    # If the user is not logged in, redirect to the login page
-    return redirect(url_for('login'))
-
 
 # Function for deleting a specific shopping list
 @app.route('/delete_list/<list_id>', methods=["GET"])
 def delete_list(list_id):
-  # If the user is logged in, delete the shopping list
-  if "user_id" in session:
     # Query the database for the shopping list with the given name and the current user's id
-    list_data = db.execute("SELECT * FROM shopping_lists WHERE id = ? AND user_id = ?", list_id, session['user_id'])
+    list_data = db.execute("SELECT * FROM shopping_lists WHERE id = ? AND user_id = ?", list_id, 0)
 
     if list_data:
         # Delete the shopping list and all the items in the list from the database
@@ -105,10 +77,6 @@ def delete_list(list_id):
 
     # Redirect to the home page to display the updated list of shopping lists
     return redirect(url_for('home'))
-
-  else:
-    # If the user is not logged in, redirect to the login page
-    return redirect(url_for('login'))
 
 
 # Function for adding an item to a specific shopping list
@@ -160,38 +128,3 @@ def register():
         return redirect("/")
   # If the request method is GET, render the register page
   return render_template("register.html")
-
-
-# Function to login a already registered user
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        # Get the username and password from the form
-        username = request.form.get("username")
-        password = request.form.get("password")
-
-        # Query the database for the user with the given username and password
-        user = db.execute("SELECT * FROM users WHERE name = ? AND password = ?", username, password)
-        if user:
-            # If a matching user was found, store the username in the session and redirect to the home page
-            session["username"] = username
-            session["user_id"] = user[0]["id"]
-            return redirect(url_for('home'))
-        else:
-            # If no matching user was found, render an error message on the login page
-            return render_template("login.html", error="Invalid username or password")
-
-    # If the request method is GET, render the login page
-    return render_template("login.html")
-
-
-# Function to logout the currently logged in user
-@app.route("/logout", methods=["GET", "POST"])
-def logout():
-    # Clear the username and user ID from the session
-    session.pop("username", None)
-    session.pop("user_id", None)
-    session.clear()
-  
-    # Redirect to the login page
-    return redirect(url_for('login'))
