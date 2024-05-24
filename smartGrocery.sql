@@ -1,3 +1,9 @@
+CREATE ShoppingListMapping (
+    ShoppingListId INTEGER,
+    ProductID INTEGER
+    PRIMARY KEY(ShoppingListID)
+    );
+
 CREATE TABLE ProductList (
     ProductName TEXT,
     ProductID INTEGER,
@@ -20,26 +26,26 @@ INSERT INTO ProductList (ProductName, ProductID) VALUES ('Chicken', 8001);
 INSERT INTO ProductList (ProductName, ProductID) VALUES ('Toilet Paper', 9001);
 
 CREATE TABLE ShoppingLists (
-    ProductName TEXT,
-    ShoppingListID INTEGER
+    ShoppingListName TEXT,
+    ProductID INTEGER
 );
 
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Chocolate', 1);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Shampoo', 1);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Rice', 1);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Chips', 1);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Frozen Pizza', 1);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Beer', 1);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Chicken', 1);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Toilet Paper', 1);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Bodywash', 2);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Pasta', 2);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Cookies', 2);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Frozen Pizza', 2);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Frozen Vegetables', 2);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Toilet Paper', 2);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Cola', 2);
-INSERT INTO ShoppingLists (ProductName, ShoppingListID) VALUES ('Water', 2);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('A', 2001);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('A', 3001);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('A', 4001);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('A', 4002);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('A', 5001);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('A', 6001);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('A', 7001);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('A', 7003);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('B', 3002);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('B', 4002);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('B', 5002);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('B', 6002);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('B', 7002);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('B', 8001);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('B', 9001);
+INSERT INTO ShoppingLists (ShoppingListName, ProductID) VALUES ('B', 7003);
 
 CREATE TABLE SupermarketList (
     SupermarketName TEXT,
@@ -52,7 +58,9 @@ INSERT INTO SupermarketList (SupermarketName, SupermarketID) VALUES ('RedMarket'
 INSERT INTO SupermarketList (SupermarketName, SupermarketID) VALUES ('YellowMarket', 3);
 
 CREATE TABLE Mapping (
-    Product TEXT,
+    ProductID1 INTEGER,
+    ProductID2 INTEGER,
     SupermarketID INTEGER,
+    Counter INTEGER,
     FOREIGN KEY(SupermarketID) REFERENCES SupermarketList(SupermarketID)
 );
