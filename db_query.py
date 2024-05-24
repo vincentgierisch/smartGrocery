@@ -60,6 +60,25 @@ def add_mapping_entries(db_path, supermarked_id):
     conn.commit()
     conn.close()
 
+def add_shopping_tour(db_path, product_sorting, supermarket_id):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+
+    for i in range (len(product_sorting)):
+        for j in range(i, len(product_sorting)):
+            product_id1 = product_sorting[i]
+            product_id2 = product_sorting[j]
+            cursor.execute("""
+                UPDATE Mapping
+                SET counter = counter + 1
+                WHERE ProductID1 = ? AND ProductID2 = ? AND SupermarketID = ?
+            """, (product_id1, product_id2, supermarket_id))
+    conn.commit()
+    conn.close()
+
+
+
 
 if __name__ == '__main__':
     # Example usage
@@ -80,5 +99,11 @@ if __name__ == '__main__':
     add_mapping_entries(db_path, 1)
     add_mapping_entries(db_path, 2)
 
-    print(tour)
+    for i in range(100):
+        tour = create_shopping_tour(order_products=[i for i in range(len(product_ids))], min_products=3,
+                                    max_products=len(product_ids), randomness=0.7)
+        prod_tour_sorting = [product_ids[index] for index in tour]
+        print(prod_tour_sorting)
+        add_shopping_tour(db_path, prod_tour_sorting, 1)
+
 
