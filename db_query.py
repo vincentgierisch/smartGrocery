@@ -52,8 +52,7 @@ def add_mapping_entries(db_path, supermarked_id):
     # Insert mappings into the Mapping table
     for product_id_1 in product_ids:
         for product_id_2 in product_ids:
-            if product_id_1 != product_id_2:  # Skip self-mapping if not needed
-                cursor.execute("INSERT INTO Mapping (ProductID1, ProductID2, SupermarketID, Counter) VALUES (?, ?, ?, ?)",
+            cursor.execute("INSERT INTO Mapping (ProductID1, ProductID2, SupermarketID, Counter) VALUES (?, ?, ?, ?)",
                                (product_id_1, product_id_2, supermarked_id, 0))
 
     # Commit the changes and close the connection
