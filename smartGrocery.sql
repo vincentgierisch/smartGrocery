@@ -1,22 +1,32 @@
 CREATE TABLE `ShoppingList` (
   `ShoppingListId` integer PRIMARY KEY,
-  `ShoppingListName` text
+  `ShoppingListName` text,
+    FOREIGN KEY (`ShoppingListId`) REFERENCES `ShoppingListMapping` (`ShoppingListId`)
+
 );
 
 CREATE TABLE `ShoppingListMapping` (
   `ListMappingID` integer PRIMARY KEY,
   `ShoppingListId` integer,
-  `ProductID` integer
+  `ProductID` integer,
+    FOREIGN KEY (`ProductID`) REFERENCES `ProductList` (`ProductID`)
+
 );
 
 CREATE TABLE `ProductList` (
   `ProductName` text,
-  `ProductID` integer PRIMARY KEY
+  `ProductID` integer PRIMARY KEY,
+    FOREIGN KEY (`ProductID`) REFERENCES `Mapping` (`ProductID1`),
+    FOREIGN KEY (`ProductID`) REFERENCES `Mapping` (`ProductID2`)
+
+
 );
 
 CREATE TABLE `SupermarketList` (
   `SupermarketName` TEXT,
-  `SupermarketID` integer PRIMARY KEY
+  `SupermarketID` integer PRIMARY KEY,
+    FOREIGN KEY (`SupermarketID`) REFERENCES `Mapping` (`SupermarketID`)
+
 );
 
 CREATE TABLE `Mapping` (
@@ -26,16 +36,6 @@ CREATE TABLE `Mapping` (
   `SupermarketID` integer,
   `Counter` integer
 );
-
-ALTER TABLE `ShoppingList` ADD FOREIGN KEY (`ShoppingListId`) REFERENCES `ShoppingListMapping` (`ShoppingListId`);
-
-ALTER TABLE `ShoppingListMapping` ADD FOREIGN KEY (`ProductID`) REFERENCES `ProductList` (`ProductID`);
-
-ALTER TABLE `SupermarketList` ADD FOREIGN KEY (`SupermarketID`) REFERENCES `Mapping` (`SupermarketID`);
-
-ALTER TABLE `ProductList` ADD FOREIGN KEY (`ProductID`) REFERENCES `Mapping` (`ProductID1`);
-
-ALTER TABLE `ProductList` ADD FOREIGN KEY (`ProductID`) REFERENCES `Mapping` (`ProductID2`);
 
 INSERT INTO ShoppingList (ShoppingListId, ShoppingListName) VALUES (1, 'Monday');
 INSERT INTO ShoppingList (ShoppingListId, ShoppingListName) VALUES (2, 'Friday');
