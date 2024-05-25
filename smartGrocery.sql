@@ -1,32 +1,22 @@
 CREATE TABLE `ShoppingList` (
   `ShoppingListId` integer PRIMARY KEY,
-  `ShoppingListName` text,
-    FOREIGN KEY (`ShoppingListId`) REFERENCES `ShoppingListMapping` (`ShoppingListId`)
-
+  `ShoppingListName` text
 );
 
 CREATE TABLE `ShoppingListMapping` (
   `ListMappingID` integer PRIMARY KEY,
   `ShoppingListId` integer,
-  `ProductID` integer,
-    FOREIGN KEY (`ProductID`) REFERENCES `ProductList` (`ProductID`)
-
+  `ProductID` integer
 );
 
 CREATE TABLE `ProductList` (
   `ProductName` text,
-  `ProductID` integer PRIMARY KEY,
-    FOREIGN KEY (`ProductID`) REFERENCES `Mapping` (`ProductID1`),
-    FOREIGN KEY (`ProductID`) REFERENCES `Mapping` (`ProductID2`)
-
-
+  `ProductID` integer PRIMARY KEY
 );
 
 CREATE TABLE `SupermarketList` (
   `SupermarketName` TEXT,
-  `SupermarketID` integer PRIMARY KEY,
-    FOREIGN KEY (`SupermarketID`) REFERENCES `Mapping` (`SupermarketID`)
-
+  `SupermarketID` integer PRIMARY KEY
 );
 
 CREATE TABLE `Mapping` (
@@ -77,4 +67,3 @@ INSERT INTO ShoppingListMapping (ProductID, ShoppingListID) VALUES (7003, 2);
 
 INSERT INTO SupermarketList (SupermarketName, SupermarketID) VALUES ('GreenMarket', 1);
 INSERT INTO SupermarketList (SupermarketName, SupermarketID) VALUES ('RedMarket', 2);
-
