@@ -1,6 +1,5 @@
 import random
 
-
 def create_shopping_tour(order_products, min_products, max_products, randomness):
     num_products = random.randint(min_products, max_products)
     tour = []

@@ -7,7 +7,7 @@ from cs50 import SQL
 
 
 app = Flask(__name__)
-db = SQL("sqlite:///../shopping.db")
+db = SQL("sqlite:///../smartGrocery.db")
 
 # Configure session
 app.config["SESSION_PERMANENT"] = False
