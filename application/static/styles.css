@@ -45,4 +45,7 @@ a:hover {
   border-color: #004d65; /* Set border color */
 }
 
-
+.checked-item {
+    color: gray;
+    text-decoration: line-through;
+}
