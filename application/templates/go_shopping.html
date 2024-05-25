@@ -14,6 +14,11 @@
     <!--   </div> -->
     <!--   <hr> -->
     <!-- {% endfor %} -->
+
+    
+    <button type="submit" class="btn btn-primary" onclick="redirectWithQuantumSort()">Use Quantum Sort</button>
+    <button type="submit" class="btn btn-primary" onclick="removeQuantumSort()">Use AI Sort</button>
+    <ul class="list-group" style="margin-top: 10px">
     {% for item in items %}
         <li class="list-group-item">
           <div class="form-check">
@@ -22,6 +27,7 @@
           </div>
         </li>
     {% endfor %}
+    </ul>
 </div>
 <script>
       function toggleCheck(checkbox) {
@@ -32,6 +38,16 @@
         } else {
           label.classList.remove('checked-item');
         }
+      }
+    function redirectWithQuantumSort() {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('quantumSort', 'true');
+        window.location.href = currentUrl.toString();
+    }
+    function removeQuantumSort() {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.delete('quantumSort');
+        window.location.href = currentUrl.toString();
       }
 </script>
 {% endblock %}

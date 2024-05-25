@@ -1,6 +1,8 @@
 from flask import Flask, request, render_template, redirect, url_for, session
 from flask_session import Session
 from src.product_shop_sorting import sort_shopping_list
+import requests
+import random
 
 # here: same functionality as "from cs50 import SQL"
 from cs50 import SQL
@@ -69,8 +71,12 @@ def view_list(list_id):
 @app.route('/go_shopping/<list_id>', methods=['GET'])
 def go_shopping(list_id):
     supermarket_id = "test"
+    quantumSort: bool = False
     if request.method == "GET":
         supermarket_id = request.args.get('supermarket')
+        if "quantumSort" in request.args:
+            quantumSort = bool(request.args.get('quantumSort'))
+    print(quantumSort)
 
     list_data = db.execute("SELECT * FROM ShoppingList WHERE ShoppingListId = ?", list_id)
     supermarket = db.execute("SELECT * FROM SupermarketList WHERE SupermarketID = ?", supermarket_id)
@@ -79,7 +85,15 @@ def go_shopping(list_id):
         items = db.execute("SELECT * FROM ShoppingListMapping sm, ProductList pl WHERE sm.ShoppingListId = ? AND sm.ProductID = pl.ProductID", list_id)
         products = db.execute("SELECT * FROM ProductList")
         product_ids = [item['ProductID'] for item in items]
-        sorted_product_ids = sort_shopping_list('../smartGrocery.db', supermarket_id, product_ids)
+        sorted_product_ids = product_ids
+        if quantumSort:
+            response = requests.get("https://lfdr.de/qrng_api/qrng?length=8") 
+            qrnStr:str = response.json()['qrn']
+            qrn: int = eval("0x"+qrnStr)
+            random.seed(qrn)
+            random.shuffle(sorted_product_ids)
+        else:
+            sorted_product_ids = sort_shopping_list('../smartGrocery.db', supermarket_id, product_ids)
         product_id_to_index = {pid: index for index, pid in enumerate(sorted_product_ids)}
         items = sorted(items, key=lambda item: product_id_to_index[item['ProductID']])
         # ToDo: replace "items = []" with code that gets all the items of the specific list - name of the variable: items
