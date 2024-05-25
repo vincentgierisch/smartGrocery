@@ -1,4 +1,5 @@
 import sqlite3
+import copy
 
 def get_product_mappings_for_supermarket(db_path, supermarket_id, product_ids):
     """
@@ -55,15 +56,25 @@ def get_product_mappings_for_supermarket(db_path, supermarket_id, product_ids):
 
     return product_ids_list, product_mappings
 
+def calculate_comparison_matrix(mapping_matrix):
+    copy_matrix = copy.deepcopy(mapping_matrix)
 
-# Example usage
-db_path = '../../smartGrocery.db'  # Path to your SQLite database file
-supermarket_id = 1  # Replace with the desired SupermarketID
+    for i in range(len(mapping_matrix)):
+        for j in range(len(mapping_matrix[i])):
+            copy_matrix[i][j] = mapping_matrix[i][j] - mapping_matrix[j][i]
+    return copy_matrix
 
-# Get product mappings for the specified SupermarketID
-product_ids, product_mappings = get_product_mappings_for_supermarket(db_path, supermarket_id, [2001,7003,8001,9001])
 
-# Print the two-dimensional array of product mappings
-print(product_ids)
-for mapping in product_mappings:
-    print(mapping)
+if __name__ == '__main__':
+    # Example usage
+    db_path = '../../smartGrocery.db'  # Path to your SQLite database file
+    supermarket_id = 1  # Replace with the desired SupermarketID
+
+    # Get product mappings for the specified SupermarketID
+    product_ids, product_mappings = get_product_mappings_for_supermarket(db_path, supermarket_id, [7002, 3001,3002,2001,4001,4002,5001,5002,6001,6002,7001,7003,8001,9001])
+
+    product_mappings = calculate_comparison_matrix(product_mappings)
+    # Print the two-dimensional array of product mappings
+    print(product_ids)
+    for mapping in product_mappings:
+        print(mapping)
