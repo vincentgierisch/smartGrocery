@@ -91,7 +91,7 @@ if __name__ == '__main__':
     for row in data:
         print(row)
 
-    product_ids = [7003, 3001,3002,2001,4001,4002, 5002,6001,6002,7001,7002,8001]
+    product_ids = [9001,8001, 5001,2001,3001,3002,4001,4002,5002,6001,6002,7001,7002,7003]
     tour = create_shopping_tour(order_products=[i for i in range(len(product_ids))], min_products=3, max_products=len(product_ids), randomness=0.9)
 
     del_mapping_entries(db_path)

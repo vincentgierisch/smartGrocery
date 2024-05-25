@@ -1,21 +1,33 @@
 import numpy as np
-from query_mapping import get_product_mappings_for_supermarket, calculate_comparison_matrix
+from .query_mapping import get_product_mappings_for_supermarket, calculate_comparison_matrix
 def get_sign(x):
     if x > 0:
         return 1
     elif x < 0:
         return -1
     else:
-        return -2
+        return 0
 
 """
 Returns sorted indices of the products with the one having the most incoming edges being the smallest one
 """
-def sort_shopping_list(matrix):
+def get_sorting(matrix):
     sums = [sum([get_sign(entry) for entry in row]) for row in matrix]
     sums = np.array(sums)
     sorted_indices = np.argsort(sums)[::-1]
     return sorted_indices
+
+def sort_shopping_list(db_path, supermarket_id, product_ids):
+    product_ids, product_mappings = get_product_mappings_for_supermarket(db_path, supermarket_id, product_ids)
+    product_mappings = calculate_comparison_matrix(product_mappings)
+    print(np.array(product_mappings))
+    sorting = get_sorting(product_mappings)
+    print(f"sorting:{sorting}")
+    sorted_product_ids = [product_ids[index] for index in sorting]
+    print(sorted_product_ids)
+    return sorted_product_ids
+
+
 
 if __name__ == '__main__':
     db_path = '../../smartGrocery.db'  # Path to your SQLite database file
@@ -30,7 +42,7 @@ if __name__ == '__main__':
     product_mappings = calculate_comparison_matrix(product_mappings)
 
     print(np.array(product_mappings))
-    sorting = sort_shopping_list(product_mappings)
+    sorting = get_sorting(product_mappings)
     print(f"sorted_shopping_list: {sorting}")
     print([product_ids[index] for index in sorting])
 

@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, session
 from flask_session import Session
+from src.product_shop_sorting import sort_shopping_list
 
 # here: same functionality as "from cs50 import SQL"
 from cs50 import SQL
@@ -77,6 +78,10 @@ def go_shopping(list_id):
         # Query the database for the items in the shopping list
         items = db.execute("SELECT * FROM ShoppingListMapping sm, ProductList pl WHERE sm.ShoppingListId = ? AND sm.ProductID = pl.ProductID", list_id)
         products = db.execute("SELECT * FROM ProductList")
+        product_ids = [item['ProductID'] for item in items]
+        sorted_product_ids = sort_shopping_list('../smartGrocery.db', supermarket_id, product_ids)
+        product_id_to_index = {pid: index for index, pid in enumerate(sorted_product_ids)}
+        items = sorted(items, key=lambda item: product_id_to_index[item['ProductID']])
         # ToDo: replace "items = []" with code that gets all the items of the specific list - name of the variable: items
         
         # Render the list page with the items of the shopping list
