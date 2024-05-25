@@ -112,33 +112,21 @@ def delete_list(list_id):
 # Function for adding an item to a specific shopping list
 @app.route('/add_item/<list_id>', methods=['POST'])
 def add_item(list_id):
-  # If the user is logged in, render the add item page
-  if "user_id" in session:
-    # ToDo: If a list_name and an item_name (not empty) were given/found, add the item to the specific list
-    # ToDo: Info: the variable list_name is the list_name that is also given in the URL - you can use this variable in your code
-    # ToDo: Replace the following return statement or integrate it in your code
-    return redirect(url_for('view_list', list_id=list_id))
+    itemName = request.form.get("item_name") 
+    item = db.execute("SELECT * FROM ProductList WHERE ProductName = ?", itemName)
+    if len(item) == 1:
+        db.execute("INSERT INTO ShoppingListMapping (ProductID, ShoppingListId) VALUES(?, ?)", item[0]['ProductID'], list_id)
+        return redirect(url_for('view_list', list_id=list_id))
+    else:
+        return redirect(url_for('home'))
     
-  else:
-    # If the user is not logged in, redirect to the login page
-    return redirect(url_for('login'))
 
 
 # Function for deleting an item from a specific shopping list
-@app.route('/delete_item/<list_id>/<item_id>', methods=["GET"])
+@app.route('/delete_item/<list_id>/<item_id>', methods=["POST"])
 def delete_item(list_id, item_id):
-  # If the user is logged in, render the delete item page
-  if "user_id" in session:
-    # ToDo: If a list_name and an item_name were found, delete the item from the specific list
-    # ToDo: Info: the variables list_name and item_name are the list_name and irem_name that are also given in the URL - you can use this variables in your code
-
-    # Redirect to the view_list page to display the updated list
+    db.execute("DELETE FROM ShoppingListMapping WHERE ProductID = ? AND ShoppingListId = ?", item_id, list_id)
     return redirect(url_for('view_list', list_id=list_id))
-
-  else:
-    # If the user is not logged in, redirect to the login page
-    return redirect(url_for('login'))
-
 
 # Function to register a new user
 @app.route("/register", methods=["GET", "POST"])
