@@ -1,24 +1,76 @@
-
-
 {% extends "layout.html" %}
 
 {% block body %}
 
-<h1>{{ list_name }}</h1>
-<!-- ToDo: Add code to display the items of a shopping list - each item has a delete button that calls delete_item with parameters -->
+<div class="container">
+    <h1>{{ list_name }}</h1>
+    <h2>Add an item to the list</h2>
+    <form action="{{ url_for('add_item', list_id=list_id) }}" method="POST">
+        <div class="form-group">
+            <label for="item_name">Item name:</label>
+            <input type="text" class="form-control" name="item_name" id="item_name" placeholder="Enter item name">
+        </div>
+        <button type="submit" class="btn btn-primary">Add item</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Start Shopping
+        </button>
 
-  <h2>Add an item to the list</h2>
-  <form action="{{ url_for('add_item', list_id=list_id) }}" method="POST">
-    <div class="form-group">
-      <label for="item_name">Item name:</label>
-      <input type="text" class="form-control" name="item_name" id="item_name" placeholder="Enter item name">
-    </div>
-    <button type="submit" class="btn btn-primary">Add item</button>
-  </form>
-  <br>
-  <p>
-    
-    <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to home</a>
-  </p>
+    </form>
+    <br>
+    <!-- <p> -->
+    <!--     <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to home</a> -->
+    <!-- </p> -->
+
+    {% for item in items %}
+      <div class="item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+        <p style="margin: 0;">{{ item.ProductName }}</p>
+        <form action="{{ url_for('delete_item', list_id=list_id, item_id=item.id) }}" method="GET">
+          <button type="submit" class="btn btn-danger">Delete item</button>
+        </form>
+      </div>
+      <hr>
+    {% endfor %}
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ready to Start Shopping?</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+        <form action="{{ url_for('go_shopping', list_id=list_id)}}" method="GET">
+      <div class="modal-body">
+        Please select your supermarket:
+        <select class="form-select" aria-label="" name="supermarket">
+            {% for supermarket in supermarkets %} 
+                <option value="{{supermarket.SupermarketID}}">{{supermarket.SupermarketName}}</option>
+            {% endfor %} 
+        </select>
+      </div>
+      <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Start Shopping</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+<script> 
+  $(function() { 
+    var availableTags = [ 
+        {% for product in products %} 
+            "{{product.ProductName}}", 
+        {% endfor %} 
+    ]; 
+    $( "#item_name" ).autocomplete({ 
+      source: availableTags 
+    }); 
+  }); 
+</script> 
 {% endblock %}
+

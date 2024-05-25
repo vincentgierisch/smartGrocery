@@ -6,7 +6,7 @@ from cs50 import SQL
 
 
 app = Flask(__name__)
-db = SQL("sqlite:///shopping.db")
+db = SQL("sqlite:///../shopping.db")
 
 # Configure session
 app.config["SESSION_PERMANENT"] = False
@@ -17,7 +17,7 @@ Session(app)
 # Homepage that displays all shopping lists
 @app.route('/')
 def home():
-    shopping_lists = db.execute("SELECT * FROM shopping_lists WHERE user_id = ?", 0)
+    shopping_lists = db.execute("SELECT * FROM ShoppingList")
     # Display the shopping lists on the home page
     return render_template('home.html', shopping_lists=shopping_lists)
 
@@ -48,17 +48,42 @@ def add_list():
 @app.route('/view_list/<list_id>')
 def view_list(list_id):
     # Query the database for the shopping list with the given name and the current user's id
-    list_data = db.execute("SELECT * FROM shopping_lists WHERE id = ? AND user_id = ?", list_id, 0)
+    
+    list_data = db.execute("SELECT * FROM ShoppingList WHERE ShoppingListId = ?", list_id)
 
     if list_data:
         # Query the database for the items in the shopping list
-        items = []
+        items = db.execute("SELECT * FROM ShoppingListMapping sm, ProductList pl WHERE sm.ShoppingListId = ? AND sm.ProductID = pl.ProductID", list_id)
+        products = db.execute("SELECT * FROM ProductList")
+        supermarkets = db.execute("SELECT * FROM SupermarketList")
         # ToDo: replace "items = []" with code that gets all the items of the specific list - name of the variable: items
         
         # Render the list page with the items of the shopping list
-        return render_template('list.html', list_name=list_data[0]['title'], list_id=list_id, items=items)
+        return render_template('list.html', list_name=list_data[0]['ShoppingListName'], list_id=list_id, items=items, products=products, supermarkets=supermarkets)
 
     # If the list was not found, redirect to the home page
+    return redirect(url_for('home'))
+
+# Function that gets called if the user clicks on a specific shopping list
+@app.route('/go_shopping/<list_id>', methods=['GET'])
+def go_shopping(list_id):
+    supermarket_id = "test"
+    if request.method == "GET":
+        supermarket_id = request.args.get('supermarket')
+
+    list_data = db.execute("SELECT * FROM ShoppingList WHERE ShoppingListId = ?", list_id)
+    supermarket = db.execute("SELECT * FROM SupermarketList WHERE SupermarketID = ?", supermarket_id)
+    if list_data:
+        # Query the database for the items in the shopping list
+        items = db.execute("SELECT * FROM ShoppingListMapping sm, ProductList pl WHERE sm.ShoppingListId = ? AND sm.ProductID = pl.ProductID", list_id)
+        products = db.execute("SELECT * FROM ProductList")
+        # ToDo: replace "items = []" with code that gets all the items of the specific list - name of the variable: items
+        
+        # Render the list page with the items of the shopping list
+
+        print(supermarket)
+        return render_template('go_shopping.html', list_name=list_data[0]['ShoppingListName'], list_id=list_id, items=items, products=products, supermarket=supermarket[0])
+
     return redirect(url_for('home'))
 
 
